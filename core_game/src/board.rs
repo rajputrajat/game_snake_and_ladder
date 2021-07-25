@@ -17,6 +17,11 @@ pub enum Entity {
 
 impl Entity {
     pub fn get_randomly(side_length: u8, count: u8) -> Vec<Entity> {
+        const START: Position = Position { x: 0, y: 0 };
+        let stop = Position {
+            x: (side_length - 1),
+            y: (side_length - 1),
+        };
         println!("testing");
         assert!(count < side_length.pow(2));
         let mut entities: Vec<Entity> = Vec::new();
@@ -46,10 +51,18 @@ impl Entity {
                         to: Position { x: x_to, y: y_to },
                     })
                 };
-                println!("{:?}", entity);
                 if !entities.iter().any(|x| x.is_related(&entity)) {
-                    entities.push(entity);
-                    return;
+                    match entity {
+                        Entity::Snake(m) | Entity::Ladder(m) => {
+                            if m.from.eq(&START)
+                                || m.to.eq(&START)
+                                || m.from.eq(&stop)
+                                || m.to.eq(&stop)
+                            {}
+                            entities.push(entity);
+                            return;
+                        }
+                    }
                 }
             }
         });
