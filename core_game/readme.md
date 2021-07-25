@@ -7,5 +7,5 @@ Let's list down required functionalities first
 * dice has 6 faces
 * play starts with 1 or 6
 * if a player's piece overlaps other player's piece.
-* * overlapped one has to restart
-* * the one overlapped gets one more chance to roll the dice
+  * overlapped one has to restart
+  * the one overlapped gets one more chance to roll the dice
