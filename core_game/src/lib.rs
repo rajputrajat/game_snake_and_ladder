@@ -1,9 +1,9 @@
 //! # Core game logic goes in here
 //!
 #![deny(unsafe_code)]
-#![deny(missing_docs)]
+#![warn(missing_docs)]
 
-mod board;
+pub mod board;
 mod game;
 mod misc;
 mod player;
