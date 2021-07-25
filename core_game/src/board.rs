@@ -1,6 +1,6 @@
+/// Game board
 use crate::misc::{Movement, Position};
 use anyhow::{anyhow, Result};
-/// Game board
 use rand::prelude::*;
 
 pub(crate) struct Board {
@@ -8,28 +8,49 @@ pub(crate) struct Board {
     entities: Vec<Entity>,
 }
 
+#[derive(PartialEq, Debug)]
 enum Entity {
-    Snake(Option<Movement>),
-    Ladder(Option<Movement>),
-}
-
-impl Entity {
-    fn does_pos_overlap(&self, pos: Position) -> Result<bool> {
-        match &self {
-            Entity::Snake(Some(m)) | Entity::Ladder(Some(m)) => Ok(pos == m.from || pos == m.to),
-            _ => Err(anyhow!("this entity isn't initialized")),
-        }
-    }
+    Snake(Movement),
+    Ladder(Movement),
 }
 
 impl Entity {
     fn get_randomly(side_length: u8, count: u8) -> Vec<Entity> {
         assert!(count < side_length.pow(2));
         let mut entities: Vec<Entity> = Vec::new();
+        let mut rng = thread_rng();
         (0..count).into_iter().for_each(|_| loop {
-            kkkk
-            if entities.iter().find(|x| )
+            loop {
+                let x_from = rng.gen_range(0..side_length);
+                let x_to = rng.gen_range(0..side_length);
+                let entity = if rand::random() {
+                    let y_from = rng.gen_range(1..side_length);
+                    let y_to = rng.gen_range(0..y_from);
+                    Entity::Snake(Movement {
+                        from: Position {
+                            x: x_from,
+                            y: y_from,
+                        },
+                        to: Position { x: x_to, y: y_to },
+                    })
+                } else {
+                    let y_from = rng.gen_range(0..(side_length - 1));
+                    let y_to = rng.gen_range(1..y_from);
+                    Entity::Ladder(Movement {
+                        from: Position {
+                            x: x_from,
+                            y: y_from,
+                        },
+                        to: Position { x: x_to, y: y_to },
+                    })
+                };
+                if !entities.iter().any(|x| x == &entity) {
+                    entities.push(entity);
+                    break;
+                }
+            }
         });
+        entities
     }
 }
 
