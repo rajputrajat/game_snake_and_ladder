@@ -3,6 +3,11 @@
 #![deny(unsafe_code)]
 #![deny(missing_docs)]
 
+mod board;
+mod game;
+mod misc;
+mod player;
+
 #[cfg(test)]
 mod tests {
     #[test]
