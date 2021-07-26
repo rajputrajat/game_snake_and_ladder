@@ -1,9 +1,4 @@
-use crate::{
-    abilities::Ability,
-    board::SideLength,
-    cell::CellId,
-    misc::{Movement, Position},
-};
+use crate::{abilities::Ability, board::SideLength, cell::CellId};
 use anyhow::{anyhow, Result};
 use rand::{prelude::*, rngs::ThreadRng};
 use std::{collections::HashMap, ops::Range};
@@ -13,6 +8,12 @@ pub(crate) enum Entity {
     Snake(Movement),
     Ladder(Movement),
     Ability(Ability),
+}
+
+#[derive(PartialEq, Debug, Clone, Copy)]
+pub struct Movement {
+    pub(crate) from: CellId,
+    pub(crate) to: CellId,
 }
 
 pub(crate) struct EntityFactory {
@@ -28,9 +29,23 @@ impl EntityFactory {
         }
     }
 
-    pub(crate) fn create_assorted(mut self, side_length: u8) -> HashMap<CellId, Entity> {
+    pub(crate) fn create_assorted(mut self, side_length: u8) -> Result<HashMap<CellId, Entity>> {
         let mut rng = thread_rng();
-        self.entities
+
+        (0..rng.gen_range(8..12)).try_for_each(|x| -> Result<()> {
+            let lower = self.find_empty_random_upper(&mut rng, CellId(1))?;
+            if rand::random() {
+                self.entities.insert(
+                    lower,
+                    Entity::Snake(Movement {
+                        from: lower,
+                        to: self.find_empty_random_lower(&mut rng, lower)?,
+                    }),
+                );
+            }
+            Ok(())
+        });
+        Ok(self.entities)
     }
 
     fn find_empty_random_lower(&self, rng: &mut ThreadRng, cell_id: CellId) -> Result<CellId> {

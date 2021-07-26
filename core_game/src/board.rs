@@ -2,7 +2,6 @@
 use crate::{
     cell::{Cell, CellId},
     entity::Entity,
-    misc::{Movement, Position},
     player::{Player, PlayerId, PlayerState},
 };
 use anyhow::{anyhow, Result};
