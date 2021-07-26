@@ -52,7 +52,7 @@ impl Entity {
                     })
                 };
                 if !entities.iter().any(|x| x.is_related(&entity)) {
-                    match entity {
+                    match &entity {
                         Entity::Snake(m) | Entity::Ladder(m) => {
                             if m.from.eq(&START)
                                 || m.to.eq(&START)
