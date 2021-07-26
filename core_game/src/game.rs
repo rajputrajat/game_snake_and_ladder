@@ -1,5 +1,5 @@
 /// Game
-use crate::board::{Board, Entity};
+use crate::board::Board;
 use crate::player::{Player, PlayerState};
 
 pub struct Game {

@@ -1,5 +1,6 @@
 use crate::{
     abilities::Ability,
+    board::SideLength,
     cell::CellId,
     misc::{Movement, Position},
 };
@@ -14,19 +15,26 @@ pub(crate) enum Entity {
 }
 
 pub(crate) struct EntityFactory {
+    side_length: SideLength,
     entities: HashMap<CellId, Entity>,
 }
 
 impl EntityFactory {
-    pub(crate) fn new() -> Self {
+    pub(crate) fn new(side_length: SideLength) -> Self {
         Self {
             entities: HashMap::new(),
+            side_length,
         }
     }
 
     pub(crate) fn create_assorted(mut self, side_length: u8) -> HashMap<CellId, Entity> {
         let mut rng = thread_rng();
         self.entities
+    }
+
+    #[inline]
+    fn max_cell_count(&self) -> usize {
+        // self.side_length.pow(2)
     }
 
     fn find_empty_random_lower(&self, rng: &mut ThreadRng, cell_id: CellId) -> CellId {}
