@@ -4,7 +4,7 @@ use crate::{
     entity::Entity,
     player::{Dice, Player, PlayerId},
 };
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use log::trace;
 use rand::prelude::*;
 use std::collections::HashMap;
@@ -43,10 +43,13 @@ impl Board {
         PlayerId(self.players.len() as u8 - 1)
     }
 
-    pub(crate) fn remove(&mut self, player_id: PlayerId) {
+    pub(crate) fn remove(&mut self, player_id: PlayerId) -> Result<()> {
         if let Some(v) = self.players.get_mut(&player_id) {
             trace!("player leaving: {:?}", v);
             *v = (None, None);
+            Ok(())
+        } else {
+            Err(anyhow!("this player -> '{:?}' doesn't exist!", &player_id))
         }
     }
 
