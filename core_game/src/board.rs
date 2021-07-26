@@ -2,25 +2,22 @@
 use crate::{
     cell::{Cell, CellId},
     entity::Entity,
-    player::{Player, PlayerId},
+    player::{Dice, Player, PlayerId},
 };
-use anyhow::{anyhow, Result};
-use log::{error, info, trace};
+use anyhow::Result;
+use log::trace;
+use rand::prelude::*;
 use std::collections::HashMap;
 
+/// Board is a square of value of this type
 pub struct SideLength(pub(crate) u8);
-impl SideLength {
-    #[inline]
-    pub(crate) fn sq(self) -> u8 {
-        self.0.pow(2)
-    }
-}
 
 pub(crate) struct Board {
     side_length: SideLength,
     players: HashMap<PlayerId, (Option<Player>, Option<CellId>)>,
     cells: Vec<Cell>,
     current_player: Option<PlayerId>,
+    rng: ThreadRng,
 }
 
 // for associated functions
@@ -31,6 +28,7 @@ impl Board {
             cells: Vec::new(),
             current_player: None,
             players: HashMap::new(),
+            rng: rand::thread_rng(),
         }
     }
 }
@@ -58,6 +56,7 @@ impl Board {
 
 // private functions
 impl Board {
+    /// check if this player's piece is overlapping some other's
     fn check_piece_overlap(&self, player_id: PlayerId) -> Option<PlayerId> {
         if let (_, Some(p_cell)) = self.players[&player_id] {
             let overlapped_players: Vec<PlayerId> = self
@@ -80,7 +79,13 @@ impl Board {
         None
     }
 
-    fn play_turn(player_id: PlayerId) {}
+    /// play turn for player
+    fn play_turn(&mut self, player_id: PlayerId) {}
+
+    fn roll_dice(&mut self, dice: &Dice) -> u8 {
+        self.rng.gen_range(1..dice.num_faces())
+    }
+
     fn create_cells() {}
     fn create_entities() {}
     fn push_entities() {}

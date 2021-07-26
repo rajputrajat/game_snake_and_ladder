@@ -1,4 +1,8 @@
-use crate::{abilities::Ability, board::SideLength, cell::CellId};
+use crate::{
+    abilities::{Ability, ABILITIES},
+    board::SideLength,
+    cell::CellId,
+};
 use anyhow::{anyhow, Result};
 use rand::{prelude::*, rngs::ThreadRng};
 use std::{collections::HashMap, ops::Range};
@@ -57,18 +61,12 @@ impl EntityFactory {
             }
             Ok(())
         })?;
-        let mut insert_ability = |a: Ability| -> Result<()> {
-            (0..rng.gen_range(1..3)).try_for_each(|_| -> Result<()> {
-                self.entities.insert(
-                    self.find_empty_random(&mut rng, 1..max_cell_index),
-                    Entity::Ability(a),
-                );
-                Ok(())
-            })?;
-            Ok(())
-        };
-        insert_ability(Ability::CustomSnLdMaker)?;
-        insert_ability(Ability::SuperDice)?;
+        (0..rng.gen_range(2..6)).for_each(|_| {
+            self.entities.insert(
+                self.find_empty_random(&mut rng, 1..max_cell_index),
+                Entity::Ability(ABILITIES[rng.gen_range(0..ABILITIES.len())]),
+            );
+        });
         Ok(self.entities)
     }
 
