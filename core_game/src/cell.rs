@@ -1,7 +1,8 @@
 use crate::entity::Entity;
 use crate::misc::Position;
 
-pub(crate) struct CellId(u8);
+#[derive(PartialEq, Debug)]
+pub(crate) struct CellId(pub(crate) u8);
 
 pub(crate) struct Cell {
     entity: Option<Entity>,

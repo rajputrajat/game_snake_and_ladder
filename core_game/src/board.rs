@@ -10,7 +10,7 @@ use log::{error, info, trace};
 use rand::prelude::*;
 use std::collections::HashMap;
 
-pub(crate) struct SideLength(u8);
+pub(crate) struct SideLength(pub(crate) u8);
 impl SideLength {
     #[inline]
     pub(crate) fn sq(self) -> u8 {

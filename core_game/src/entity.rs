@@ -4,8 +4,9 @@ use crate::{
     cell::CellId,
     misc::{Movement, Position},
 };
+use anyhow::{anyhow, Result};
 use rand::{prelude::*, rngs::ThreadRng};
-use std::collections::HashMap;
+use std::{collections::HashMap, ops::Range};
 
 #[derive(PartialEq, Debug)]
 pub(crate) enum Entity {
@@ -32,12 +33,28 @@ impl EntityFactory {
         self.entities
     }
 
-    fn find_empty_random_lower(&self, rng: &mut ThreadRng, cell_id: CellId) -> CellId {}
-    fn find_empty_random_upper(&self, rng: &mut ThreadRng, cell_id: CellId) -> CellId {}
-    fn find_empty_random(&self, rng: &mut ThreadRng) -> CellId {
+    fn find_empty_random_lower(&self, rng: &mut ThreadRng, cell_id: CellId) -> Result<CellId> {
+        if cell_id.0 < self.side_length.0 {
+            Err(anyhow!("cell_id: {:?} is lowest row", cell_id))
+        } else {
+            let lower_cell = (cell_id.0 / self.side_length.0) - 1;
+            Ok(self.find_empty_random(rng, 1..(lower_cell * self.side_length.0)))
+        }
+    }
+
+    fn find_empty_random_upper(&self, rng: &mut ThreadRng, cell_id: CellId) -> Result<CellId> {
+        if cell_id.0 > (self.side_length.0 * (self.side_length.0 - 1)) {
+            Err(anyhow!("cell_id: {:?} is upper-most row", cell_id))
+        } else {
+            let upper_cell = (cell_id.0 / self.side_length.0) + 1;
+            Ok(self.find_empty_random(rng, upper_cell..self.side_length.0))
+        }
+    }
+
+    fn find_empty_random(&self, rng: &mut ThreadRng, range: Range<u8>) -> CellId {
         loop {
-            let cell = rng.gen_range(1..(self.side_length.eq() - 1));
-            if !self.entities.keys().iter().any(|x| x == cell) {
+            let cell = CellId(rng.gen_range(range.clone()));
+            if !self.entities.keys().any(|x| x == &cell) {
                 return cell;
             }
         }
