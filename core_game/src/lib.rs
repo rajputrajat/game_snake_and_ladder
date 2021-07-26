@@ -11,7 +11,10 @@ mod game;
 mod misc;
 mod player;
 
-pub use crate::player::{Player, PlayerAction, PlayerId};
+pub use crate::{
+    board::SideLength,
+    player::{Player, PlayerAction, PlayerId},
+};
 use anyhow::Result;
 
 pub struct GameCore {
@@ -21,13 +24,21 @@ pub struct GameCore {
 impl GameCore {
     pub fn update() {}
 
-    pub fn add_player(player: Player) -> PlayerId {}
+    pub fn add_player(player: Player) -> PlayerId {
+        PlayerId(0)
+    }
 
-    pub fn remove_player(player_id: PlayerId) -> Result<()> {}
+    pub fn remove_player(player_id: PlayerId) -> Result<()> {
+        Ok(())
+    }
 
-    pub fn create_board(side_length: SideLength) -> Result<()> {}
+    pub fn create_board(side_length: SideLength) -> Result<()> {
+        Ok(())
+    }
 
-    pub fn action(player_id: PlayerId, player_action: PlayerAction) {}
+    pub fn action(player_id: PlayerId, player_action: PlayerAction) -> Result<()> {
+        Ok(())
+    }
 }
 
 #[cfg(test)]

@@ -2,16 +2,16 @@
 use crate::abilities::Ability;
 use crate::entity::Movement;
 
-pub(crate) struct PlayerId(u8);
+pub struct PlayerId(pub u8);
 
-pub(crate) struct Player {
+pub struct Player {
     state: PlayerState,
     name: String,
     color: String,
     abilities: Vec<Ability>,
 }
 
-pub(crate) struct SuperDice(pub(crate) u8);
+pub struct SuperDiceFaces(pub(crate) u8);
 
 pub(crate) enum PlayerState {
     Idle,
@@ -19,8 +19,8 @@ pub(crate) enum PlayerState {
     Won,
 }
 
-pub(crate) enum PlayerAction {
+pub enum PlayerAction {
     RollDice,
-    RollSuperDice(SuperDice),
+    RollSuperDice(SuperDiceFaces),
     MakeCustomEntity(Movement),
 }
