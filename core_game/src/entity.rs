@@ -29,7 +29,7 @@ impl EntityFactory {
         }
     }
 
-    pub(crate) fn create_assorted(mut self, side_length: u8) -> Result<HashMap<CellId, Entity>> {
+    pub(crate) fn create_assorted(mut self) -> Result<HashMap<CellId, Entity>> {
         let mut rng = thread_rng();
 
         let max_cell_index = self.side_length.0 * self.side_length.0 - 1;
@@ -109,10 +109,9 @@ mod tests {
 
     fn create_entity_factory() -> EntityFactory {
         let mut e_factory = EntityFactory::new(SideLength(10_u8));
-        let dummy_pos = Position { x: 0, y: 0 };
         let dummy_mov = Movement {
-            from: dummy_pos,
-            to: dummy_pos,
+            from: CellId(0),
+            to: CellId(0),
         };
         (0_u8..(10_u8 * 10_u8)).for_each(|x| {
             if x % 2 == 0 {
@@ -208,5 +207,12 @@ mod tests {
         let mut rng = thread_rng();
         let found_cell_id = e_factory.find_empty_random_lower(&mut rng, CellId(9));
         assert!(found_cell_id.is_err());
+    }
+
+    #[test]
+    fn auto_insert() {
+        let e_factory = EntityFactory::new(SideLength(10_u8));
+        let count = e_factory.create_assorted().unwrap().len();
+        assert!(count >= 10 && count <= 18);
     }
 }
