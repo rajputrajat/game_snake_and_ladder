@@ -2,8 +2,10 @@
 use crate::abilities::Ability;
 use crate::entity::Movement;
 
+#[derive(PartialEq, Hash, Debug, Eq)]
 pub struct PlayerId(pub u8);
 
+#[derive(Debug)]
 pub struct Player {
     state: PlayerState,
     name: String,
@@ -13,6 +15,7 @@ pub struct Player {
 
 pub struct SuperDiceFaces(pub(crate) u8);
 
+#[derive(Debug)]
 pub(crate) enum PlayerState {
     Idle,
     InPlay,

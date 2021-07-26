@@ -12,30 +12,36 @@ mod misc;
 mod player;
 
 pub use crate::{
-    board::SideLength,
+    board::{Board, SideLength},
     player::{Player, PlayerAction, PlayerId},
 };
 use anyhow::Result;
 
+/// Game core functionality
 pub struct GameCore {
+    /// player ids
     pub players: Vec<PlayerId>,
+    /// board
+    board: Board,
 }
 
 impl GameCore {
-    pub fn update() {}
-
-    pub fn add_player(player: Player) -> PlayerId {
-        PlayerId(0)
-    }
-
-    pub fn remove_player(player_id: PlayerId) -> Result<()> {
-        Ok(())
-    }
-
+    /// create game board
     pub fn create_board(side_length: SideLength) -> Result<()> {
         Ok(())
     }
 
+    /// add a player on board
+    pub fn add_player(player: Player) -> PlayerId {
+        PlayerId(0)
+    }
+
+    /// remove player at any time
+    pub fn remove_player(player_id: PlayerId) -> Result<()> {
+        Ok(())
+    }
+
+    /// player action
     pub fn action(player_id: PlayerId, player_action: PlayerAction) -> Result<()> {
         Ok(())
     }
