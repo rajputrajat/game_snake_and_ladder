@@ -32,12 +32,14 @@ impl EntityFactory {
         self.entities
     }
 
-    #[inline]
-    fn max_cell_count(&self) -> usize {
-        // self.side_length.pow(2)
-    }
-
     fn find_empty_random_lower(&self, rng: &mut ThreadRng, cell_id: CellId) -> CellId {}
     fn find_empty_random_upper(&self, rng: &mut ThreadRng, cell_id: CellId) -> CellId {}
-    fn find_empty_random(&self, rng: &mut ThreadRng) -> CellId {}
+    fn find_empty_random(&self, rng: &mut ThreadRng) -> CellId {
+        loop {
+            let cell = rng.gen_range(1..(self.side_length.eq() - 1));
+            if !self.entities.keys().iter().any(|x| x == cell) {
+                return cell;
+            }
+        }
+    }
 }

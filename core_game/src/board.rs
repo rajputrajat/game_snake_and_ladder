@@ -11,6 +11,12 @@ use rand::prelude::*;
 use std::collections::HashMap;
 
 pub(crate) struct SideLength(u8);
+impl SideLength {
+    #[inline]
+    pub(crate) fn sq(self) -> u8 {
+        self.0.pow(2)
+    }
+}
 
 pub(crate) struct Board {
     side_length: SideLength,
