@@ -38,7 +38,7 @@ impl EntityFactory {
             Err(anyhow!("cell_id: {:?} is lowest row", cell_id))
         } else {
             let lower_row = (cell_id.0 / self.side_length.0) - 1;
-            Ok(self.find_empty_random(rng, 1..(lower_row * self.side_length.0)))
+            Ok(self.find_empty_random(rng, 1..((lower_row + 1) * self.side_length.0 - 1)))
         }
     }
 
@@ -128,10 +128,46 @@ mod tests {
     }
 
     #[test]
-    fn lower() {
+    fn lower_1() {
         let e_factory = create_entity_factory();
         let mut rng = thread_rng();
-        let found_cell_id = e_factory.find_empty_random(&mut rng, 1..99).0;
+        let found_cell_id = e_factory
+            .find_empty_random_lower(&mut rng, CellId(20))
+            .unwrap()
+            .0;
         assert_eq!(found_cell_id % 2, 1);
+        assert!(found_cell_id < 20);
+    }
+
+    #[test]
+    fn lower_2() {
+        let e_factory = create_entity_factory();
+        let mut rng = thread_rng();
+        let found_cell_id = e_factory
+            .find_empty_random_lower(&mut rng, CellId(10))
+            .unwrap()
+            .0;
+        assert_eq!(found_cell_id % 2, 1);
+        assert!(found_cell_id < 10);
+    }
+
+    #[test]
+    fn lower_3() {
+        let e_factory = create_entity_factory();
+        let mut rng = thread_rng();
+        let found_cell_id = e_factory
+            .find_empty_random_lower(&mut rng, CellId(99))
+            .unwrap()
+            .0;
+        assert_eq!(found_cell_id % 2, 1);
+        assert!(found_cell_id < 90);
+    }
+
+    #[test]
+    fn lower_4() {
+        let e_factory = create_entity_factory();
+        let mut rng = thread_rng();
+        let found_cell_id = e_factory.find_empty_random_lower(&mut rng, CellId(9));
+        assert!(found_cell_id.is_err());
     }
 }
