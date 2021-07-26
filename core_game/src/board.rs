@@ -2,7 +2,7 @@
 use crate::{
     cell::{Cell, CellId},
     entity::Entity,
-    player::{Dice, Player, PlayerId},
+    player::{Dice, Player, PlayerAction, PlayerId},
 };
 use anyhow::{anyhow, Result};
 use log::trace;
@@ -53,8 +53,15 @@ impl Board {
         }
     }
 
-    pub(crate) fn action(&self, player_id: PlayerId) -> Result<()> {
+    pub(crate) fn action(&self, player_id: PlayerId, action: PlayerAction) -> Result<()> {
         Ok(())
+    }
+
+    pub(crate) fn read_player_info(&self, check_player: PlayerId) -> Result<Player> {
+        self.players[&check_player]
+            .0
+            .clone()
+            .ok_or_else(|| anyhow!("Player '{:?}' doesn't exist!", &check_player))
     }
 }
 

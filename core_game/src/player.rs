@@ -6,7 +6,7 @@ use crate::abilities::Ability;
 pub struct PlayerId(pub u8);
 
 /// player data
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Player {
     state: PlayerState,
     name: String,
@@ -33,7 +33,7 @@ impl Dice {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub(crate) enum PlayerState {
     Idle,
     InPlay,
@@ -41,6 +41,7 @@ pub(crate) enum PlayerState {
 }
 
 /// all possible player actions
+#[derive(Debug, Clone, Copy)]
 pub enum PlayerAction {
     /// Roll the dice
     RollDice(Dice),

@@ -28,23 +28,31 @@ pub struct GameCore {
 
 impl GameCore {
     /// create game board
-    pub fn create_board(side_length: SideLength) -> Result<()> {
+    pub fn create_board(&mut self, side_length: SideLength) -> Result<()> {
+        self.board = Board::new(side_length);
         Ok(())
     }
 
     /// add a player on board
-    pub fn add_player(player: Player) -> PlayerId {
-        PlayerId(0)
+    pub fn add_player(&mut self, joining_player: Player) -> PlayerId {
+        let joining_player_id = self.board.join(joining_player);
+        self.players.push(joining_player_id);
+        joining_player_id
     }
 
     /// remove player at any time
-    pub fn remove_player(player_id: PlayerId) -> Result<()> {
-        Ok(())
+    pub fn remove_player(&mut self, leaving_player_id: PlayerId) -> Result<()> {
+        self.board.remove(leaving_player_id)
+    }
+
+    /// get player info back
+    pub fn get_player(&self, check_player_id: PlayerId) -> Result<Player> {
+        self.board.read_player_info(check_player_id)
     }
 
     /// player action
-    pub fn action(player_id: PlayerId, player_action: PlayerAction) -> Result<()> {
-        Ok(())
+    pub fn action(&mut self, player_id: PlayerId, player_action: PlayerAction) -> Result<()> {
+        self.board.action(player_id, player_action)
     }
 }
 
