@@ -44,7 +44,7 @@ impl EntityFactory {
                 );
             }
             Ok(())
-        });
+        })?;
         Ok(self.entities)
     }
 
