@@ -32,19 +32,43 @@ impl EntityFactory {
     pub(crate) fn create_assorted(mut self, side_length: u8) -> Result<HashMap<CellId, Entity>> {
         let mut rng = thread_rng();
 
-        (0..rng.gen_range(8..12)).try_for_each(|x| -> Result<()> {
-            let lower = self.find_empty_random_upper(&mut rng, CellId(1))?;
+        let max_cell_index = self.side_length.0 * self.side_length.0 - 1;
+
+        (0..rng.gen_range(8..12)).try_for_each(|_| -> Result<()> {
             if rand::random() {
+                let snake_head = self.find_empty_random_upper(&mut rng, CellId(1))?;
                 self.entities.insert(
-                    lower,
+                    snake_head,
                     Entity::Snake(Movement {
-                        from: lower,
-                        to: self.find_empty_random_lower(&mut rng, lower)?,
+                        from: snake_head,
+                        to: self.find_empty_random_lower(&mut rng, snake_head)?,
+                    }),
+                );
+            } else {
+                let lower_ladder =
+                    self.find_empty_random_lower(&mut rng, CellId(max_cell_index - 1))?;
+                self.entities.insert(
+                    lower_ladder,
+                    Entity::Ladder(Movement {
+                        from: lower_ladder,
+                        to: self.find_empty_random_upper(&mut rng, lower_ladder)?,
                     }),
                 );
             }
             Ok(())
         })?;
+        let mut insert_ability = |a: Ability| -> Result<()> {
+            (0..rng.gen_range(1..3)).try_for_each(|_| -> Result<()> {
+                self.entities.insert(
+                    self.find_empty_random(&mut rng, 1..max_cell_index),
+                    Entity::Ability(a),
+                );
+                Ok(())
+            })?;
+            Ok(())
+        };
+        insert_ability(Ability::CustomSnLdMaker)?;
+        insert_ability(Ability::SuperDice)?;
         Ok(self.entities)
     }
 
