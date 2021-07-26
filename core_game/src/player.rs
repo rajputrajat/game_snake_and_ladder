@@ -1,7 +1,11 @@
 /// Player
+use crate::abilities::Ability;
+
 pub(crate) struct Player {
     state: PlayerState,
-    cur_pos: u16,
+    name: String,
+    color: String,
+    abilities: Vec<Ability>,
 }
 
 pub(crate) enum PlayerState {

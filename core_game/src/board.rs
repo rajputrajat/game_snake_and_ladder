@@ -9,12 +9,6 @@ pub(crate) struct Board {
     entities: Vec<Entity>,
 }
 
-#[derive(PartialEq, Debug)]
-pub enum Entity {
-    Snake(Movement),
-    Ladder(Movement),
-}
-
 impl Entity {
     pub fn get_randomly(side_length: u8, count: u8) -> Vec<Entity> {
         const START: Position = Position { x: 0, y: 0 };

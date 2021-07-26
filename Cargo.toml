@@ -2,5 +2,6 @@
 
 members = [
     "core_game",
-    "ui"
+    "ui",
+    "server"
 ]
