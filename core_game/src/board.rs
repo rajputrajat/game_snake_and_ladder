@@ -44,9 +44,10 @@ impl Board {
     }
 
     pub(crate) fn remove(&mut self, player_id: PlayerId) {
-        let mut leaving_player = &self.players[&player_id];
-        trace!("player leaving: {:?}", leaving_player);
-        leaving_player = &(None, None);
+        if let Some(v) = self.players.get_mut(&player_id) {
+            trace!("player leaving: {:?}", v);
+            *v = (None, None);
+        }
     }
 
     pub(crate) fn action(&self, player_id: PlayerId) -> Result<()> {
