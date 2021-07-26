@@ -2,7 +2,7 @@
 use crate::abilities::Ability;
 use crate::entity::Movement;
 
-#[derive(PartialEq, Hash, Debug, Eq)]
+#[derive(PartialEq, Hash, Debug, Eq, Copy, Clone)]
 pub struct PlayerId(pub u8);
 
 #[derive(Debug)]

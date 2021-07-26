@@ -11,8 +11,9 @@ mod game;
 mod misc;
 mod player;
 
+use crate::board::Board;
 pub use crate::{
-    board::{Board, SideLength},
+    board::SideLength,
     player::{Player, PlayerAction, PlayerId},
 };
 use anyhow::Result;

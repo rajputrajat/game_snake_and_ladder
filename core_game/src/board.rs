@@ -58,7 +58,28 @@ impl Board {
 
 // private functions
 impl Board {
-    fn check_piece_overlap() {}
+    fn check_piece_overlap(&self, player_id: PlayerId) -> Option<PlayerId> {
+        if let (_, Some(p_cell)) = self.players[&player_id] {
+            let overlapped_players: Vec<PlayerId> = self
+                .players
+                .iter()
+                .filter_map(|(&p_id, &(_, c))| {
+                    if let Some(c) = c {
+                        if p_cell == c {
+                            return Some(p_id);
+                        }
+                    }
+                    None
+                })
+                .collect();
+            assert!(overlapped_players.len() <= 1);
+            if overlapped_players.len() == 1 {
+                return Some(overlapped_players[0]);
+            }
+        }
+        None
+    }
+
     fn play_turn(player_id: PlayerId) {}
     fn create_cells() {}
     fn create_entities() {}
