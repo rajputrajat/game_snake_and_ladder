@@ -1,15 +1,24 @@
 //! Game board
-use crate::misc::{Movement, Position};
+use crate::{
+    cell::{Cell, CellId},
+    entity::Entity,
+    misc::{Movement, Position},
+    player::{Player, PlayerId, PlayerState},
+};
 use anyhow::{anyhow, Result};
 use log::{error, info, trace};
 use rand::prelude::*;
+use std::collections::HashMap;
 
 pub(crate) struct Board {
-    sq_of_side: u8,
-    entities: Vec<Entity>,
+    side_length: u8,
+    players: Vec<Player>,
+    cells: Vec<Cell>,
+    current_player: PlayerId,
+    player_map: HashMap<PlayerId, CellId>,
 }
 
-impl Entity {
+impl Board {
     pub fn get_randomly(side_length: u8, count: u8) -> Vec<Entity> {
         const START: Position = Position { x: 0, y: 0 };
         let stop = Position {
