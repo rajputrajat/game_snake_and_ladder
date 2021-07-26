@@ -19,7 +19,7 @@ impl Entity {
     pub fn get_randomly(side_length: u8, count: u8) -> Vec<Entity> {
         const START: Position = Position { x: 0, y: 0 };
         let stop = Position {
-            x: (side_length - 1),
+            x: 0,
             y: (side_length - 1),
         };
         println!("testing");
@@ -42,7 +42,7 @@ impl Entity {
                     })
                 } else {
                     let y_from = rng.gen_range(0..(side_length - 1));
-                    let y_to = rng.gen_range(y_from..side_length);
+                    let y_to = rng.gen_range((y_from + 1)..side_length);
                     Entity::Ladder(Movement {
                         from: Position {
                             x: x_from,
@@ -54,13 +54,14 @@ impl Entity {
                 if !entities.iter().any(|x| x.is_related(&entity)) {
                     match &entity {
                         Entity::Snake(m) | Entity::Ladder(m) => {
-                            if m.from.eq(&START)
-                                || m.to.eq(&START)
-                                || m.from.eq(&stop)
-                                || m.to.eq(&stop)
-                            {}
-                            entities.push(entity);
-                            return;
+                            if m.from.ne(&START)
+                                && m.to.ne(&START)
+                                && m.from.ne(&stop)
+                                && m.to.ne(&stop)
+                            {
+                                entities.push(entity);
+                                return;
+                            }
                         }
                     }
                 }
