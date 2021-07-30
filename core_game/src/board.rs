@@ -18,17 +18,22 @@ pub(crate) struct Board {
     cells: Vec<Cell>,
     current_player: Option<PlayerId>,
     rng: ThreadRng,
-    state: BoardStateMachine,
+    state: StateMachine,
 }
 
-enum BoardStateMachine {
-    Start,
-    WaitingForTurn,
-    UseAbility,
-    RollDice,
-    ProcessResult,
+enum StateMachine {
+    Init,
+    HandlePlayerAction,
     Move,
-    End,
+    CheckEntity,
+    CheckOverlap,
+    Win,
+}
+
+impl StateMachine {
+    fn goto(&mut self, next_state: StateMachine) {
+        *self = next_state;
+    }
 }
 
 // for associated functions
@@ -40,7 +45,7 @@ impl Board {
             current_player: None,
             players: HashMap::new(),
             rng: rand::thread_rng(),
-            state: BoardStateMachine::Start,
+            state: StateMachine::Init,
         }
     }
 }
@@ -65,7 +70,19 @@ impl Board {
         }
     }
 
-    pub(crate) fn action(&self, player_id: PlayerId, action: PlayerAction) -> Result<()> {
+    pub(crate) fn action(&mut self, player_id: PlayerId, action: PlayerAction) -> Result<()> {
+        assert_eq!(&self.state, StateMachine::Init);
+        loop {
+            match &self.state {
+                &StateMachine::HandlePlayerAction => match &action {
+                    &PlayerAction::RollDice(dice) => {
+                        let num_faces = dice.num_faces();
+                        let outcome = self.roll_dice(Dice(num_faces));
+                    }
+                },
+                &StateMachine::Move => {}
+            }
+        }
         Ok(())
     }
 
