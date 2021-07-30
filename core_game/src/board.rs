@@ -18,6 +18,7 @@ pub(crate) struct Board {
     cells: Vec<Cell>,
     current_player: Option<PlayerId>,
     rng: ThreadRng,
+    state: BoardStateMachine,
 }
 
 enum BoardStateMachine {
@@ -39,6 +40,7 @@ impl Board {
             current_player: None,
             players: HashMap::new(),
             rng: rand::thread_rng(),
+            state: BoardStateMachine::Start,
         }
     }
 }
