@@ -20,6 +20,16 @@ pub(crate) struct Board {
     rng: ThreadRng,
 }
 
+enum BoardStateMachine {
+    Start,
+    WaitingForTurn,
+    UseAbility,
+    RollDice,
+    ProcessResult,
+    Move,
+    End,
+}
+
 // for associated functions
 impl Board {
     pub(crate) fn new(side_length: SideLength) -> Self {
