@@ -21,6 +21,7 @@ pub(crate) struct Board {
     state: StateMachine,
 }
 
+#[derive(Debug, PartialEq)]
 enum StateMachine {
     Init,
     HandlePlayerAction,
@@ -71,13 +72,12 @@ impl Board {
     }
 
     pub(crate) fn action(&mut self, player_id: PlayerId, action: PlayerAction) -> Result<()> {
-        assert_eq!(&self.state, StateMachine::Init);
+        assert_eq!(self.state, StateMachine::Init);
         loop {
             match &self.state {
                 &StateMachine::HandlePlayerAction => match &action {
                     &PlayerAction::RollDice(dice) => {
-                        let num_faces = dice.num_faces();
-                        let outcome = self.roll_dice(Dice(num_faces));
+                        let outcome = self.roll_dice(&dice);
                     }
                 },
                 &StateMachine::Move => {}
