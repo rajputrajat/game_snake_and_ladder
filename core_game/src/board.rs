@@ -81,7 +81,7 @@ impl Board {
                         let outcome = self.roll_dice(&dice);
                     }
                     &PlayerAction::UseAbility(ability) => match &ability {
-                        &Ability::SuperDice(dice) => self.get_player_mut(player_id)?.abilities,
+                        &Ability::SuperDice(dice) => self.get_player_mut(player_id)?.
                     },
                 },
                 &StateMachine::Move => {}
