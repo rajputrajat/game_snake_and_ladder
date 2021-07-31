@@ -1,5 +1,6 @@
 //! Game board
 use crate::{
+    abilities::Ability,
     cell::{Cell, CellId},
     entity::Entity,
     player::{Dice, Player, PlayerAction, PlayerId},
@@ -79,6 +80,9 @@ impl Board {
                     &PlayerAction::RollDice(dice) => {
                         let outcome = self.roll_dice(&dice);
                     }
+                    &PlayerAction::UseAbility(ability) => match &ability {
+                        &Ability::SuperDice(dice) => {}
+                    },
                 },
                 &StateMachine::Move => {}
             }
@@ -96,6 +100,24 @@ impl Board {
 
 // private functions
 impl Board {
+    fn get_player(&self, player_id: PlayerId) -> Result<&Player> {
+        self.players
+            .get(&player_id)
+            .ok_or_else(|| anyhow!("invalid player '{:?}'", player_id))?
+            .0
+            .as_ref()
+            .ok_or_else(|| anyhow!("player: '{:?}' has left the game.", player_id))
+    }
+
+    fn get_player_mut(&mut self, player_id: PlayerId) -> Result<&mut Player> {
+        self.players
+            .get_mut(&player_id)
+            .ok_or_else(|| anyhow!("invalid player '{:?}'", player_id))?
+            .0
+            .as_mut()
+            .ok_or_else(|| anyhow!("player: '{:?}' has left the game.", player_id))
+    }
+
     /// check if this player's piece is overlapping some other's
     fn check_piece_overlap(&self, player_id: PlayerId) -> Option<PlayerId> {
         if let (_, Some(p_cell)) = self.players[&player_id] {
