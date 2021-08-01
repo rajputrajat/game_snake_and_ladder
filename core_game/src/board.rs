@@ -76,26 +76,26 @@ impl Board {
         assert_eq!(self.state, StateMachine::Init);
         loop {
             match &self.state {
-                &StateMachine::HandlePlayerAction => match &action {
-                    &PlayerAction::RollDice(dice) => {
-                        let outcome = self.roll_dice(&dice);
+                StateMachine::HandlePlayerAction => match &action {
+                    PlayerAction::RollDice(dice) => {
+                        let outcome = self.roll_dice(dice);
                     }
-                    &PlayerAction::UseAbility(ability) => {
+                    PlayerAction::UseAbility(ability) => {
                         match &ability {
-                            &Ability::SuperDice(dice) => {}
-                            &Ability::CustomSnLdMaker(Some(movement)) => {}
+                            Ability::SuperDice(dice) => {}
+                            Ability::CustomSnLdMaker(Some(movement)) => {}
                             _ => {}
                         }
-                        self.get_player_mut(player_id)?.remove_ability(ability)?;
+                        self.get_player_mut(player_id)?.remove_ability(*ability)?;
                     }
                 },
-                &StateMachine::Move => {
+                StateMachine::Move => {
                     break;
                 }
-                &StateMachine::Init => {}
-                &StateMachine::CheckEntity => {}
-                &StateMachine::CheckOverlap => {}
-                &StateMachine::Win => {}
+                StateMachine::Init => {}
+                StateMachine::CheckEntity => {}
+                StateMachine::CheckOverlap => {}
+                StateMachine::Win => {}
             }
         }
         Ok(())
