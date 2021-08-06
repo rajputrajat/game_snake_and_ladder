@@ -29,6 +29,7 @@ enum StateMachine {
     Move,
     CheckEntity,
     CheckOverlap,
+    CheckWin,
     Win,
 }
 
@@ -74,11 +75,14 @@ impl Board {
 
     pub(crate) fn action(&mut self, player_id: PlayerId, action: PlayerAction) -> Result<()> {
         assert_eq!(self.state, StateMachine::Init);
+        let mut dice_output;
         loop {
             match &self.state {
+                StateMachine::Init => {}
                 StateMachine::HandlePlayerAction => match &action {
                     PlayerAction::RollDice(dice) => {
-                        let outcome = self.roll_dice(dice);
+                        dice_output = self.roll_dice(dice);
+                        self.state = StateMachine::Move;
                     }
                     PlayerAction::UseAbility(ability) => {
                         match &ability {
@@ -90,11 +94,19 @@ impl Board {
                     }
                 },
                 StateMachine::Move => {
+                    self.state = StateMachine::CheckEntity;
+                    self.players.
                     break;
                 }
-                StateMachine::Init => {}
-                StateMachine::CheckEntity => {}
-                StateMachine::CheckOverlap => {}
+                StateMachine::CheckEntity => {
+                    self.state = StateMachine::CheckOverlap;
+                }
+                StateMachine::CheckOverlap => {
+                    self.state = StateMachine::CheckWin;
+                }
+                StateMachine::CheckWin => {
+                    self.state = StateMachine::Win;
+                }
                 StateMachine::Win => {}
             }
         }
@@ -111,6 +123,15 @@ impl Board {
 
 // private functions
 impl Board {
+    fn get_player_cell(&self, player_id: PlayerId) -> Result<&Player> {
+        self.players
+            .get(&player_id)
+            .ok_or_else(|| anyhow!("invalid player '{:?}'", player_id))?
+            .0
+            .as_ref()
+            .ok_or_else(|| anyhow!("player: '{:?}' has left the game.", player_id))
+    }
+
     fn get_player(&self, player_id: PlayerId) -> Result<&Player> {
         self.players
             .get(&player_id)
